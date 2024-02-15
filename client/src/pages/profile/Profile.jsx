@@ -9,18 +9,24 @@ import { useParams } from "react-router";
 export default function Profile() {
   const PublicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState({});
+  const [userData, setUserData] = useState({});
   const username = useParams().username;
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(`/users/?username=${username}`);
         setUser(res.data);
+        console.log(res.data);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
     fetchUser();
   }, [username]);
+  const updateDetails = async (userId, userData) => {
+    const response = await axios.put(`users/${userId}`, userData);
+    console.log(response);
+  };
   return (
     <>
       <Topbar />

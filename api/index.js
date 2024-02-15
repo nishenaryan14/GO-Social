@@ -10,7 +10,7 @@ const authRoute = require("./routes/auth");
 const postRoute = require("./routes/posts");
 const router = express.Router();
 const path = require("path");
-
+// const PORT =
 dotenv.config();
 
 mongoose

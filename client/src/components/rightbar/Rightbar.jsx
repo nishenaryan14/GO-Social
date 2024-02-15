@@ -16,10 +16,11 @@ export default function Rightbar({ user }) {
     setFollowed(currentUser.followings.includes(user?._id));
   }, [currentUser, user]);
   useEffect(() => {
-    const getFriends = async (req, res) => {
+    const getFriends = async () => {
       try {
-        const friendList = await axios.get("/users/friends/" + user._id);
+        const friendList = await axios.get("/users/friends/" + user?._id);
         setFriends(friendList.data);
+        console.log(friends);
       } catch (error) {
         console.log(error);
       }
@@ -106,6 +107,7 @@ export default function Rightbar({ user }) {
           {friends.map((friend) => {
             return (
               <Link
+                key={friend._id}
                 to={"/profile/" + friend.username}
                 style={{ textDecoration: "none" }}
               >

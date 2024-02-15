@@ -1,7 +1,7 @@
 .topbarContainer {
   height: 50px;
   width: 100%;
-  background-color: #1877f2;
+  background-color: #04a5ea;
   display: flex;
   align-items: center;
   position: sticky;
@@ -31,13 +31,17 @@
   transition: all 0.3s ease;
 }
 .searchbar:active {
-  outline: #1877f2;
+  outline: #18f2ca;
   border: 2px solid black;
 }
 
 .searchInput {
   border: none;
   width: 70%;
+}
+.search {
+  cursor: pointer;
+  color: grey;
 }
 /* .searchInput:not(:placeholder-shown) {
   border: 1px solid #1877f2;

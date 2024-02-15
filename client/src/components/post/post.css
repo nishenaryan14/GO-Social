@@ -18,7 +18,18 @@
   display: flex;
   align-items: center;
 }
-
+.postTopRight {
+  display: flex;
+  gap: 15px;
+}
+.postTopRightOption {
+  position: relative;
+  cursor: pointer;
+  color: darkslategray;
+}
+.postTopRightOption:hover {
+  color: rgb(154, 155, 155);
+}
 .postProfileImg {
   width: 32px;
   height: 32px;
@@ -35,12 +46,34 @@
 .postDate {
   font-size: 12px;
 }
-.postMoreOption {
-  cursor: pointer;
-}
 
 .postCenter {
+  position: relative;
   margin: 20px 0;
+}
+.textArea {
+  min-width: 330px;
+  height: max-content;
+  padding: 0 12px;
+  border-radius: 7px;
+  width: max-content;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.caption {
+  min-width: 250px;
+  width: 80%;
+  outline: none;
+  border: none;
+  height: 100%;
+  font-size: 19px;
+  /* margin: 0 28px; */
+}
+.textArea span {
+  color: rgb(248, 233, 100);
+  cursor: pointer;
 }
 
 .postImg {
@@ -48,6 +81,9 @@
   width: 100%;
   max-height: 500px;
   object-fit: contain;
+}
+
+.postHeartTransition {
 }
 .postBottom {
   display: flex;

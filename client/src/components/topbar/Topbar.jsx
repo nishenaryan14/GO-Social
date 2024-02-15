@@ -1,11 +1,46 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import "./topbar.css";
 import { Search, Person, Chat, Notifications } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
+
 const Topbar = () => {
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  // const [username, setUsername] = useState("");
+  const searchRef = useRef(null);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSubmit();
+    }
+  };
+  const handleSubmit = () => {
+    // const data = getUser(searchRef.current.value);
+    const username = searchRef.current.value;
+    navigate(`profile/${username}`);
+  };
+
+  const getUser = async (username, userId) => {
+    try {
+      let response;
+      if (userId) {
+        response = await axios.get(`/users/`, { params: { userId } });
+      } else if (username) {
+        // setUsername(username);
+        response = await axios.get(`/users/`, { params: { username } });
+      } else {
+        console.error("Neither username nor userId provided.");
+        return;
+      }
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
@@ -18,9 +53,15 @@ const Topbar = () => {
           <Search className="searchIcon" />
           <input
             type="text"
-            placeholder="Search for friend , post or video"
+            ref={searchRef}
+            name="searchInput"
+            placeholder="Search for friend, post, or video"
             className="searchInput"
+            onKeyPress={handleKeyPress}
           />
+          <span onClick={handleSubmit} className="search">
+            Search
+          </span>
         </div>
       </div>
       <div className="topbarRight">

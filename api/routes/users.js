@@ -43,29 +43,59 @@ router.get("/", async (req, res) => {
   const userId = req.query.userId;
   const username = req.query.username;
   try {
-    const user = userId
-      ? await User.findById(userId)
-      : await User.findOne({ username: username });
+    let user;
+    if (userId) {
+      user = await User.findById(userId);
+    } else if (username) {
+      user = await User.findOne({ username: username });
+    } else {
+      // If neither userId nor username is provided, return an error
+      return res
+        .status(400)
+        .json({ message: "User ID or username is required" });
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
 //get friends
 router.get("/friends/:userId", async (req, res) => {
   try {
     const user = await User.findById(req.params.userId);
-    const friends = await Promise.all(
+    const followingFriends = await Promise.all(
       user.followings.map((friendId) => {
         return User.findById(friendId);
       })
     );
-    let friendList = [];
-    friends.map((friend) => {
-      const { _id, username, profilePicture } = friend;
-      friendList.push({ _id, username, profilePicture });
+    const followerFriends = await Promise.all(
+      user.followers.map((friendId) => {
+        return User.findById(friendId);
+      })
+    );
+
+    const friendMap = new Map();
+
+    // Add following friends to the map
+    followingFriends.forEach((friend) => {
+      friendMap.set(friend._id.toString(), friend);
     });
+
+    // Add follower friends to the map
+    followerFriends.forEach((friend) => {
+      friendMap.set(friend._id.toString(), friend);
+    });
+
+    // Extract unique friends from the map
+    const friendList = [...friendMap.values()];
+
     res.status(200).json(friendList);
   } catch (error) {
     res.status(500).json(error);

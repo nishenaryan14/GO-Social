@@ -33,14 +33,17 @@ export default function Share({ updatePosts }) {
       console.log(newPost);
       try {
         await axios.post("/upload", data);
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     }
     try {
       await axios.post("/posts", newPost);
-      updatePosts(newPost);
       desc.current.value = "";
       setFile(null);
+      updatePosts(newPost);
     } catch (err) {
+      console.log(err);
     } finally {
       setPostContext(false); // Show the share fields again
     }
@@ -53,9 +56,9 @@ export default function Share({ updatePosts }) {
           <img
             className="shareProfileImg"
             src={
-              user.profilePicture
+              user?.profilePicture
                 ? PF + user.profilePicture
-                : PF + "person/noAvatar.png"
+                : PF + "person/no_avatar.jpeg"
             }
             alt=""
           />

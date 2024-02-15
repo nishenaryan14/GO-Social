@@ -6,6 +6,7 @@ import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 export default function Feed({ username }) {
   const [posts, setPosts] = useState([]);
+  const [postUpdated, setPostUpdated] = useState(false);
   const { user } = useContext(AuthContext);
   useEffect(() => {
     const fetchPosts = async () => {
@@ -19,15 +20,30 @@ export default function Feed({ username }) {
             return new Date(p2.createdAt) - new Date(p1.createdAt);
           })
         );
+        setPostUpdated(false);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
     };
     fetchPosts();
-  }, [username, user._id]);
+  }, [username, user._id, postUpdated]);
   const updatePosts = (newPost) => {
-    setPosts((posts) => [newPost, ...posts]);
+    if (newPost) {
+      setPosts((posts) => [newPost, ...posts]);
+      setPostUpdated(true);
+    }
   };
+  const updateEditedPosts = (newPost) => {
+    if (newPost) {
+      setPostUpdated(true);
+    }
+  };
+  const updateDeletedPost = (deletedPostId) => {
+    setPosts((prevPosts) =>
+      prevPosts.filter((post) => post._id !== deletedPostId)
+    );
+  };
+
   return (
     <div className="feed">
       <div className="feedWrapper">
@@ -35,7 +51,15 @@ export default function Feed({ username }) {
           <Share updatePosts={updatePosts} />
         )}
         {posts.map((post) => {
-          return <Post key={post._id} post={post} />;
+          return (
+            <Post
+              key={post._id}
+              post={post}
+              updateDeletedPosts={updateDeletedPost}
+              updatePosts={updatePosts}
+              updateEditedPosts={updateEditedPosts}
+            />
+          );
         })}
       </div>
     </div>
